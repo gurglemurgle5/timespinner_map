@@ -1,0 +1,15 @@
+[package]
+name = "timespinner_map"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+[dependencies]
+anyhow = "1.0.97"
+clap = { version = "4.5.35", features = ["derive"] }
+flate2 = "1.1.1"
+num_enum = "0.7.3"
+quick-xml = { version = "0.37.4", features = ["serialize"] }
+regex = "1.11.1"
+sdl2 = { version = "0.37.0", features = ["image", "unsafe_textures"] }
+serde = { version = "1.0.219", features = ["derive"] }
