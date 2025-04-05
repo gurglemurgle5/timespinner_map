@@ -1,10 +1,11 @@
 use anyhow::Result;
 use flate2::read::ZlibDecoder;
+use sdl2::rect::Point;
 use serde::Deserialize;
 use std::io::BufReader;
 use std::{fs::File, path::Path};
 
-use crate::{Position, parse_bool};
+use crate::{parse_bool, parse_point};
 
 #[derive(Debug, Deserialize)]
 pub struct TextureDatabase {
@@ -49,8 +50,8 @@ pub struct AtlasFrame {
     pub row_width: i32,
     #[serde(rename = "@StartIndex")]
     pub start_index: i32,
-    #[serde(rename = "@FrameSize")]
-    pub frame_size: Position,
-    #[serde(rename = "@StartCoordinates")]
-    pub start_coordinates: Position,
+    #[serde(rename = "@FrameSize", deserialize_with = "parse_point")]
+    pub frame_size: Point,
+    #[serde(rename = "@StartCoordinates", deserialize_with = "parse_point")]
+    pub start_coordinates: Point,
 }

@@ -1,11 +1,12 @@
 use anyhow::Result;
 use flate2::read::ZlibDecoder;
+use sdl2::rect::Point;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 
-use crate::Position;
+use crate::parse_point;
 
 #[derive(Debug, Deserialize)]
 pub struct Minimap {
@@ -53,7 +54,7 @@ pub struct Room {
     pub width: u32,
     #[serde(rename = "@Height")]
     pub height: u32,
-    #[serde(rename = "@Position")]
-    pub position: Position,
+    #[serde(rename = "@Position", deserialize_with = "parse_point")]
+    pub position: Point,
     // skipping blocks, i don't really care about them for now, maybe later
 }

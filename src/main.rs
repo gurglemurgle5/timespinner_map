@@ -11,7 +11,6 @@ use std::path::{Path, PathBuf};
 use std::process::exit;
 use timespinner_map::texture_atlas::TextureDatabase;
 use timespinner_map::{
-    Position,
     level::{Level, Tile},
     load_map_from_file,
     minimap::Minimap,
@@ -23,8 +22,11 @@ struct Args {
     timespinner_path: PathBuf,
 }
 
+/// Tile size in pixels
 const TILE_SIZE: i32 = 16;
+/// Room width in tiles
 const ROOM_WIDTH: i32 = 25;
+/// Room height in tiles
 const ROOM_HEIGHT: i32 = 20;
 
 fn main() {
@@ -77,7 +79,11 @@ impl State {
         let video_subsystem = sdl_context.video().unwrap();
 
         let window = video_subsystem
-            .window("timespinner map stuffs", 25 * 16, 20 * 16)
+            .window(
+                "Timespinner Map",
+                (ROOM_WIDTH * TILE_SIZE) as u32,
+                (ROOM_HEIGHT * TILE_SIZE) as u32,
+            )
             .resizable()
             .build()
             .unwrap();
@@ -252,7 +258,7 @@ fn draw_tile(
     canvas: &mut Canvas<Window>,
     tile: &Tile,
     tileset: &Texture,
-    room_pos: Position,
+    room_pos: Point,
     camera: Rect,
     frames: &[Rect],
 ) {

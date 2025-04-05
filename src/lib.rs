@@ -1,6 +1,7 @@
 use regex::Regex;
+use sdl2::rect::Point;
+use serde::Deserializer;
 use serde::de::Visitor;
-use serde::{Deserialize, Deserializer};
 
 pub mod level;
 mod level_specification;
@@ -48,24 +49,16 @@ where
     deserializer.deserialize_str(BoolVisitor)
 }
 
-#[derive(Clone, Copy, Debug)]
-pub struct Position {
-    pub x: i32,
-    pub y: i32,
+fn parse_point<'de, D>(deserializer: D) -> Result<Point, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    deserializer.deserialize_str(PointVisitor)
 }
 
-impl<'de> Deserialize<'de> for Position {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        deserializer.deserialize_str(PositionVisitor)
-    }
-}
-
-struct PositionVisitor;
-impl Visitor<'_> for PositionVisitor {
-    type Value = Position;
+struct PointVisitor;
+impl Visitor<'_> for PointVisitor {
+    type Value = Point;
 
     fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter.write_str("position data in the form of a string, such as {X:0 Y:1}")
@@ -77,10 +70,10 @@ impl Visitor<'_> for PositionVisitor {
     {
         let re = Regex::new(r"^\{X:(\d+) Y:(\d+)\}$").unwrap();
         match re.captures(v) {
-            Some(captures) => Ok(Position {
-                x: captures[1].parse().unwrap(),
-                y: captures[2].parse().unwrap(),
-            }),
+            Some(captures) => Ok(Point::new(
+                captures[1].parse().unwrap(),
+                captures[2].parse().unwrap(),
+            )),
             None => todo!(),
         }
     }
